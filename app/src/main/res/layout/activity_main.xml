@@ -22,8 +22,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            app:cardBackgroundColor="@color/colorPrimary">
+            android:layout_marginEnd="5dp">
 
             <TextView
                 android:id="@+id/total_wallet"
@@ -35,8 +34,7 @@
             style="@style/StyleCardView"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            app:cardBackgroundColor="@color/colorPrimary">
+            android:layout_marginEnd="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -74,12 +72,12 @@
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/wallet_travel_card"
             style="@style/StyleCardView"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            app:cardBackgroundColor="@color/colorPrimary">
+            android:layout_marginEnd="5dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -95,20 +93,18 @@
                     android:src="@drawable/ic_plane"/>
 
                 <EditText
-                    style="@style/StyleMoney"
-                    android:hint="@string/text_travel"
-                    android:inputType="number"
-                    android:background="@null"
-                    android:textSize="16sp" />
+                    android:id="@+id/wallet_travel_text"
+                    style="@style/StyleEditMoney"
+                    android:hint="@string/hint_travel" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/wallet_deposit_card"
             style="@style/StyleCardView"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/colorPrimary">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -123,9 +119,10 @@
                     android:layout_gravity="center"
                     android:src="@drawable/ic_wallet"/>
 
-                <TextView
-                    style="@style/StyleTextMoney"
-                    android:textSize="16sp" />
+                <EditText
+                    android:id="@+id/wallet_deposit_text"
+                    style="@style/StyleEditMoney"
+                    android:hint="@string/hint_deposit"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>

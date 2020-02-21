@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">YesKWallet</string>
-    <string name="text_travel">Поездки</string>
+    <string name="hint_travel">Поездки</string>
+    <string name="hint_deposit">Депозит</string>
 </resources>
