@@ -21,7 +21,6 @@
     </style>
 
     <style name="StyleEditMoney" parent="StyleMoney">
-        <item name="android:enabled">false</item>
         <item name="android:inputType">number</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:textSize">16sp</item>

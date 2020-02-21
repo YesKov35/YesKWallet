@@ -5,13 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.inputmethod.EditorInfo
-import androidx.appcompat.app.AlertDialog
-import androidx.core.widget.addTextChangedListener
+import com.yeskov35.yeskwallet.dialogs.SetWalletDialog
 import com.yeskov35.yeskwallet.utils.TextUtils
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_set_wallet.view.*
+import kotlinx.android.synthetic.main.dialog_set_wallet.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,66 +34,63 @@ class MainActivity : AppCompatActivity() {
 
         total_wallet.text = TextUtils.priceFormat(wallet)
         if(wallet_travel > 0)
-            wallet_travel_text.setText(TextUtils.priceFormat(wallet_travel))
+            wallet_travel_text.text = TextUtils.priceFormat(wallet_travel)
         if(wallet_deposit > 0)
-            wallet_deposit_text.setText(TextUtils.priceFormat(wallet_deposit))
+            wallet_deposit_text.text = TextUtils.priceFormat(wallet_deposit)
 
-        wallet_travel_card.setOnClickListener {
-            if(!wallet_travel_text.isEnabled){
-                wallet_travel_text.isEnabled = true
-                wallet_travel_text.isFocusable = true
-            }
-        }
+        SetWalletDialog.setDialog(this, wallet_travel_card, resources.getString(R.string.hint_travel), 1)
+        SetWalletDialog.setDialog(this, wallet_deposit_card, resources.getString(R.string.hint_deposit), 2)
+        SetWalletDialog.setDialog(this, wallet_card, "текущий счет", 3)
 
-        wallet_travel_text.setOnEditorActionListener { _, actionId, _ ->
-            if(actionId == EditorInfo.IME_ACTION_DONE){
-                wallet_travel_text.isEnabled = false
-
-                true
-            } else {
-                false
-            }
-        }
-
-        wallet_travel_text.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-        })
-
-        //Dialog
-        wallet_travel_card.setOnClickListener {
-            //Inflate the dialog with custom view
-            val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_set_wallet, null)
-            //AlertDialogBuilder
-            val mBuilder = AlertDialog.Builder(this)
-                .setView(mDialogView)
-            //show dialog
-            val  mAlertDialog = mBuilder.show()
-            //login button click of custom layout
-            mDialogView.set_button.setOnClickListener {
-                //dismiss dialog
-                mAlertDialog.dismiss()
-            }
-            //cancel button click of custom layout
-        }
     }
 
     //set value to prefs
-    fun setPref(type : String, value : Int){
+    private fun setPref(type : String, value : Int){
         val editor = pref.edit()
         editor.putInt(type, value)
         editor.apply()
     }
 
     //get value from prefs
-    fun getPref(type : String): Int{
+    private fun getPref(type : String): Int{
         return pref.getInt(type, 0)
+    }
+
+    fun setWallet(type: Int, money: Int){
+        when (type) {
+            1 -> {
+                wallet -= money - wallet_travel
+                wallet_travel = money
+            }
+            2 -> {
+                wallet -= money - wallet_deposit
+                wallet_deposit = money
+            }
+            else -> {
+                wallet = money
+                wallet_travel = 0
+                wallet_deposit = 0
+            }
+        }
+
+        setPref(PREF_WALLET, wallet)
+        setPref(PREF_DEPOSIT, wallet_deposit)
+        setPref(PREF_TRAVEL, wallet_travel)
+
+        wallet_travel_text.text = TextUtils.priceFormat(wallet_travel)
+        wallet_deposit_text.text = TextUtils.priceFormat(wallet_deposit)
+        total_wallet.text = TextUtils.priceFormat(wallet)
+}
+
+    fun getWallet(): Int{
+        return wallet
+    }
+
+    fun getTravelWallet(): Int{
+        return wallet_travel
+    }
+
+    fun getDepositWallet(): Int{
+        return wallet_deposit
     }
 }

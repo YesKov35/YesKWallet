@@ -18,6 +18,7 @@
         android:paddingBottom="10dp">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/wallet_card"
             style="@style/StyleCardView"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -92,9 +93,9 @@
                     android:layout_gravity="center"
                     android:src="@drawable/ic_plane"/>
 
-                <EditText
+                <TextView
                     android:id="@+id/wallet_travel_text"
-                    style="@style/StyleEditMoney"
+                    style="@style/StyleTextMoney"
                     android:hint="@string/hint_travel" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -119,9 +120,9 @@
                     android:layout_gravity="center"
                     android:src="@drawable/ic_wallet"/>
 
-                <EditText
+                <TextView
                     android:id="@+id/wallet_deposit_text"
-                    style="@style/StyleEditMoney"
+                    style="@style/StyleTextMoney"
                     android:hint="@string/hint_deposit"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
