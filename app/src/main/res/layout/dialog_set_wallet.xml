@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimaryDark"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="?dialogPreferredPadding">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/StyleMoney"
+        android:textAlignment="center"
+        android:layout_marginBottom="10dp"/>
+
+    <EditText
+        android:id="@+id/wallet_text"
+        style="@style/StyleEditMoney"
+        android:padding="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/submit"
+        style="@style/StyleCardView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            style="@style/StyleMoney"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="OK"/>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>
