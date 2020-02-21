@@ -28,7 +28,8 @@
     </style>
 
     <style name="StyleCardView">
-        <item name="cardElevation">8dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="cardUseCompatPadding">true</item>
         <item name="cardCornerRadius">0dp</item>
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
         <item name="android:clickable">true</item>
