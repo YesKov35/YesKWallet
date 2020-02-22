@@ -6,6 +6,10 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.database.FirebaseDatabase
+import com.yeskov35.yeskwallet.adapters.WalletHistoryAdapter
+import com.yeskov35.yeskwallet.core.FirebaseWallet
 import com.yeskov35.yeskwallet.dialogs.SetWalletDialog
 import com.yeskov35.yeskwallet.utils.TextUtils
 import kotlinx.android.synthetic.main.activity_main.*
@@ -13,84 +17,90 @@ import kotlinx.android.synthetic.main.dialog_set_wallet.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var pref: SharedPreferences
-    private val PREF = "mysettings"
-    private val PREF_WALLET = "wallet"
-    private val PREF_TRAVEL = "travel"
-    private val PREF_DEPOSIT = "deposit"
-    private var wallet = 0
-    private var wallet_travel = 0
-    private var wallet_deposit = 0
+    val animals: ArrayList<String> = ArrayList()
+
+    lateinit var firebaseWallet: FirebaseWallet
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //init values
-        pref = getSharedPreferences(PREF, MODE_PRIVATE)
-        wallet = getPref(PREF_WALLET)
-        wallet_travel = getPref(PREF_TRAVEL)
-        wallet_deposit = getPref(PREF_DEPOSIT)
+        firebaseWallet = FirebaseWallet(this)
 
-        total_wallet.text = TextUtils.priceFormat(wallet)
-        if(wallet_travel > 0)
-            wallet_travel_text.text = TextUtils.priceFormat(wallet_travel)
-        if(wallet_deposit > 0)
-            wallet_deposit_text.text = TextUtils.priceFormat(wallet_deposit)
+        if (firebaseWallet.getAllWallet() > 0)
+            total_wallet.text = TextUtils.priceFormat(firebaseWallet.getAllWallet())
+        if (firebaseWallet.getTravelWallet() > 0)
+            wallet_travel_text.text = TextUtils.priceFormat(firebaseWallet.getTravelWallet())
+        if (firebaseWallet.getDepositWallet() > 0)
+            wallet_deposit_text.text = TextUtils.priceFormat(firebaseWallet.getDepositWallet())
 
-        SetWalletDialog.setDialog(this, wallet_travel_card, resources.getString(R.string.hint_travel), 1)
-        SetWalletDialog.setDialog(this, wallet_deposit_card, resources.getString(R.string.hint_deposit), 2)
+        SetWalletDialog.setDialog(
+            this,
+            wallet_travel_card,
+            resources.getString(R.string.hint_travel),
+            1
+        )
+        SetWalletDialog.setDialog(
+            this,
+            wallet_deposit_card,
+            resources.getString(R.string.hint_deposit),
+            2
+        )
         SetWalletDialog.setDialog(this, wallet_card, "текущий счет", 3)
 
+        // Loads animals into the ArrayList
+        addAnimals()
+
+        // Creates a vertical Layout Manager
+        wallet_history.layoutManager = LinearLayoutManager(this)
+
+        // You can use GridLayoutManager if you want multiple columns. Enter the number of columns as a parameter.
+        //rv_animal_list.layoutManager = GridLayoutManager(this, 2)
+
+        // Access the RecyclerView Adapter and load the data into it
+        wallet_history.adapter = WalletHistoryAdapter(animals, this)
     }
 
-    //set value to prefs
-    private fun setPref(type : String, value : Int){
-        val editor = pref.edit()
-        editor.putInt(type, value)
-        editor.apply()
+    fun addAnimals() {
+        animals.add("dog")
+        animals.add("cat")
+        animals.add("owl")
+        animals.add("cheetah")
+        animals.add("raccoon")
+        animals.add("bird")
+        animals.add("snake")
+        animals.add("lizard")
+        animals.add("hamster")
+        animals.add("bear")
+        animals.add("lion")
+        animals.add("tiger")
+        animals.add("horse")
+        animals.add("frog")
+        animals.add("fish")
+        animals.add("shark")
+        animals.add("turtle")
+        animals.add("elephant")
+        animals.add("cow")
+        animals.add("beaver")
+        animals.add("bison")
+        animals.add("porcupine")
+        animals.add("rat")
+        animals.add("mouse")
+        animals.add("goose")
+        animals.add("deer")
+        animals.add("fox")
+        animals.add("moose")
+        animals.add("buffalo")
+        animals.add("monkey")
+        animals.add("penguin")
+        animals.add("parrot")
     }
 
-    //get value from prefs
-    private fun getPref(type : String): Int{
-        return pref.getInt(type, 0)
-    }
+    fun setWallet(type: Int, money: Int) {
+        firebaseWallet.setWallet(type, money)
 
-    fun setWallet(type: Int, money: Int){
-        when (type) {
-            1 -> {
-                wallet -= money - wallet_travel
-                wallet_travel = money
-            }
-            2 -> {
-                wallet -= money - wallet_deposit
-                wallet_deposit = money
-            }
-            else -> {
-                wallet = money
-                wallet_travel = 0
-                wallet_deposit = 0
-            }
-        }
-
-        setPref(PREF_WALLET, wallet)
-        setPref(PREF_DEPOSIT, wallet_deposit)
-        setPref(PREF_TRAVEL, wallet_travel)
-
-        wallet_travel_text.text = TextUtils.priceFormat(wallet_travel)
-        wallet_deposit_text.text = TextUtils.priceFormat(wallet_deposit)
-        total_wallet.text = TextUtils.priceFormat(wallet)
-}
-
-    fun getWallet(): Int{
-        return wallet
-    }
-
-    fun getTravelWallet(): Int{
-        return wallet_travel
-    }
-
-    fun getDepositWallet(): Int{
-        return wallet_deposit
+        wallet_travel_text.text = TextUtils.priceFormat(firebaseWallet.getTravelWallet())
+        wallet_deposit_text.text = TextUtils.priceFormat(firebaseWallet.getDepositWallet())
+        total_wallet.text = TextUtils.priceFormat(firebaseWallet.getAllWallet())
     }
 }

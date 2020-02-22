@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1040981956459",
+    "firebase_url": "https://yeskwallet.firebaseio.com",
+    "project_id": "yeskwallet",
+    "storage_bucket": "yeskwallet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1040981956459:android:93fcc69f53ce0375149e2e",
+        "android_client_info": {
+          "package_name": "com.yeskov35.yeskwallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1040981956459-qhjfaapv6vbm4i2h13q14nb7u2imdgpd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yeskov35.yeskwallet",
+            "certificate_hash": "9e5998ace3070c5a9e237316ce6d626a8fce523b"
+          }
+        },
+        {
+          "client_id": "1040981956459-rt6eupvnmaheqjvu2d3ii5pqu7582j1n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCCa2jV2gh8bXwnOMpxA4qhqkhPZ9LN0I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1040981956459-rt6eupvnmaheqjvu2d3ii5pqu7582j1n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

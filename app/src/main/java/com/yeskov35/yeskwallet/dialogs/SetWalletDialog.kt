@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.dialog_set_wallet.view.*
 object SetWalletDialog {
 
     fun setDialog(activity: MainActivity, card: CardView, title: String, type: Int) {
-
         card.setOnClickListener {
             val mDialogView =
                 LayoutInflater.from(card.context).inflate(R.layout.dialog_set_wallet, null)
@@ -26,13 +25,13 @@ object SetWalletDialog {
 
             var wallet = when (type) {
                 1 -> {
-                    activity.getWallet() + activity.getTravelWallet()
+                    activity.firebaseWallet.getAllWallet() + activity.firebaseWallet.getTravelWallet()
                 }
                 2 -> {
-                    activity.getWallet() + activity.getDepositWallet()
+                    activity.firebaseWallet.getAllWallet() + activity.firebaseWallet.getDepositWallet()
                 }
                 else -> {
-                    activity.getWallet() + activity.getTravelWallet() + activity.getDepositWallet()
+                    activity.firebaseWallet.getAllWallet() + activity.firebaseWallet.getTravelWallet() + activity.firebaseWallet.getDepositWallet()
                 }
             }
 
@@ -47,7 +46,7 @@ object SetWalletDialog {
                 }
 
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if(mDialogView.wallet_text.text.toString().isNotEmpty() && type < 3) {
+                    if (mDialogView.wallet_text.text.toString().isNotEmpty() && type < 3) {
                         if (mDialogView.wallet_text.text.toString().toInt() > wallet) {
                             mDialogView.wallet_text.setText(wallet.toString())
                         }
