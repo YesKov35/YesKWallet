@@ -39,4 +39,8 @@
     <style name="StyleCardViewCompat" parent="StyleCardView">
         <item name="cardUseCompatPadding">true</item>
     </style>
+
+    <style name="StyleTab">
+
+    </style>
 </resources>

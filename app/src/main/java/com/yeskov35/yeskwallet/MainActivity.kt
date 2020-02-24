@@ -6,10 +6,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.FirebaseDatabase
 import com.yeskov35.yeskwallet.adapters.WalletHistoryAdapter
 import com.yeskov35.yeskwallet.core.FirebaseWallet
+import com.yeskov35.yeskwallet.dialogs.SetWalletCategoryDialog
 import com.yeskov35.yeskwallet.dialogs.SetWalletDialog
 import com.yeskov35.yeskwallet.utils.TextUtils
 import kotlinx.android.synthetic.main.activity_main.*
@@ -25,15 +27,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        firebaseWallet = FirebaseWallet(this)
-
-        if (firebaseWallet.getAllWallet() > 0)
-            total_wallet.text = TextUtils.priceFormat(firebaseWallet.getAllWallet())
-        if (firebaseWallet.getTravelWallet() > 0)
-            wallet_travel_text.text = TextUtils.priceFormat(firebaseWallet.getTravelWallet())
-        if (firebaseWallet.getDepositWallet() > 0)
-            wallet_deposit_text.text = TextUtils.priceFormat(firebaseWallet.getDepositWallet())
-
         SetWalletDialog.setDialog(
             this,
             wallet_travel_card,
@@ -48,17 +41,30 @@ class MainActivity : AppCompatActivity() {
         )
         SetWalletDialog.setDialog(this, wallet_card, "текущий счет", 3)
 
+        SetWalletCategoryDialog.setDialog(this, icons)
         // Loads animals into the ArrayList
         addAnimals()
 
         // Creates a vertical Layout Manager
-        wallet_history.layoutManager = LinearLayoutManager(this)
+        //wallet_history.layoutManager = LinearLayoutManager(this)
 
         // You can use GridLayoutManager if you want multiple columns. Enter the number of columns as a parameter.
-        //rv_animal_list.layoutManager = GridLayoutManager(this, 2)
+        wallet_history.layoutManager = GridLayoutManager(this, 2)
 
         // Access the RecyclerView Adapter and load the data into it
         wallet_history.adapter = WalletHistoryAdapter(animals, this)
+
+        firebaseWallet = FirebaseWallet(this)
+        updateWallet()
+    }
+
+    fun updateWallet(){
+        if (firebaseWallet.getAllWallet() > 0)
+            total_wallet.text = TextUtils.priceFormat(firebaseWallet.getAllWallet())
+        if (firebaseWallet.getTravelWallet() > 0)
+            wallet_travel_text.text = TextUtils.priceFormat(firebaseWallet.getTravelWallet())
+        if (firebaseWallet.getDepositWallet() > 0)
+            wallet_deposit_text.text = TextUtils.priceFormat(firebaseWallet.getDepositWallet())
     }
 
     fun addAnimals() {

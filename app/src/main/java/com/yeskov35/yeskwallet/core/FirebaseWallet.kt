@@ -8,10 +8,12 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.yeskov35.yeskwallet.MainActivity
+import com.yeskov35.yeskwallet.models.CategoryModel
 import com.yeskov35.yeskwallet.models.WalletModel
 import java.lang.Exception
 
-class FirebaseWallet(context: Context) {
+class FirebaseWallet(private var context: Context) {
 
     private var pref: SharedPreferences
     private val PREF = "mysettings"
@@ -22,9 +24,11 @@ class FirebaseWallet(context: Context) {
     val userKey = android.os.Build.MODEL
 
     var walletModel = WalletModel()
+    var categoryList = ArrayList<CategoryModel>()
 
     private val db: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val dbWalletRef = db.getReference(userKey).child("wallet")
+    private val dbCategoryRef = db.getReference(userKey).child("category")
 
     init {
         pref = context.getSharedPreferences(PREF, AppCompatActivity.MODE_PRIVATE)
@@ -36,6 +40,42 @@ class FirebaseWallet(context: Context) {
         if(walletModel.wallet_all == -1){
             getWalletFromDb("")
         }
+
+        getCategory()
+    }
+
+    private fun getCategory(){
+        dbCategoryRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                try {
+                    val posts = ArrayList<CategoryModel>()
+                    for (snapshot in dataSnapshot.children) {
+                        val post = snapshot.getValue(CategoryModel::class.java)
+                        posts.add(post!! as CategoryModel)
+                    }
+
+                    updateWalletPref()
+                    (context as MainActivity).updateWallet()
+
+                }catch (ex: Exception){
+                    walletModel.wallet_all = 0
+                    walletModel.wallet_travel = 0
+                    walletModel.wallet_deposit = 0
+
+                    updateWalletPref()
+                    dbWalletRef.setValue(walletModel)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.w("FIREBASEERROR", "Failed to read value.", error.toException())
+            }
+        })
+    }
+
+    fun setCategory(){
+
     }
 
     private fun getWalletFromDb(walletName: String){
@@ -43,14 +83,18 @@ class FirebaseWallet(context: Context) {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 try {
                     walletModel = dataSnapshot.getValue(WalletModel::class.java)!!
+
+                    updateWalletPref()
+                    (context as MainActivity).updateWallet()
+
                 }catch (ex: Exception){
                     walletModel.wallet_all = 0
                     walletModel.wallet_travel = 0
                     walletModel.wallet_deposit = 0
 
+                    updateWalletPref()
                     dbWalletRef.setValue(walletModel)
                 }
-                walletModel
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -77,13 +121,15 @@ class FirebaseWallet(context: Context) {
             }
         }
 
-        setPref(PREF_WALLET,  walletModel.wallet_all)
-        setPref(PREF_DEPOSIT,  walletModel.wallet_deposit)
-        setPref(PREF_TRAVEL,  walletModel.wallet_travel)
-
+        updateWalletPref()
         dbWalletRef.setValue(walletModel)
     }
 
+    private fun updateWalletPref(){
+        setPref(PREF_WALLET,  walletModel.wallet_all)
+        setPref(PREF_DEPOSIT,  walletModel.wallet_deposit)
+        setPref(PREF_TRAVEL,  walletModel.wallet_travel)
+    }
 
     //set value to prefs
     private fun setPref(type: String, value: Int) {
