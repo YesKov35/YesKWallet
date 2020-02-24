@@ -2,4 +2,9 @@
     <string name="app_name">YesKWallet</string>
     <string name="hint_travel">Поездки</string>
     <string name="hint_deposit">Депозит</string>
+    <string name="hint_all_wallet">Общий счет</string>
+    <string name="hint_category">Название категории</string>
+    <string name="tab_income">Доход</string>
+    <string name="tab_consumption">Расход</string>
+    <string name="tab_category">Категории</string>
 </resources>
