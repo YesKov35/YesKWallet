@@ -24,14 +24,8 @@ object SetWalletDialog {
                 .setView(mDialogView)
 
             var wallet = when (type) {
-                1 -> {
-                    activity.firebaseWallet.getAllWallet() + activity.firebaseWallet.getTravelWallet()
-                }
-                2 -> {
-                    activity.firebaseWallet.getAllWallet() + activity.firebaseWallet.getDepositWallet()
-                }
                 else -> {
-                    activity.firebaseWallet.getAllWallet() + activity.firebaseWallet.getTravelWallet() + activity.firebaseWallet.getDepositWallet()
+                    activity.firebaseWallet.getAllWallet()
                 }
             }
 

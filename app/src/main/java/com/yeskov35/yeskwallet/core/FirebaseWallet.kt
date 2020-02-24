@@ -18,10 +18,8 @@ class FirebaseWallet(private var context: Context) {
     private var pref: SharedPreferences
     private val PREF = "mysettings"
     private val PREF_WALLET = "wallet"
-    private val PREF_TRAVEL = "travel"
-    private val PREF_DEPOSIT = "deposit"
 
-    val userKey = android.os.Build.MODEL
+    private val userKey = android.os.Build.MODEL
 
     var walletModel = WalletModel()
     var categoryList = ArrayList<CategoryModel>()
@@ -34,8 +32,6 @@ class FirebaseWallet(private var context: Context) {
         pref = context.getSharedPreferences(PREF, AppCompatActivity.MODE_PRIVATE)
 
         walletModel.wallet_all = getPref(PREF_WALLET)
-        walletModel.wallet_travel = getPref(PREF_TRAVEL)
-        walletModel.wallet_deposit = getPref(PREF_DEPOSIT)
 
         if(walletModel.wallet_all == -1){
             getWalletFromDb("")
@@ -48,22 +44,15 @@ class FirebaseWallet(private var context: Context) {
         dbCategoryRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 try {
-                    val posts = ArrayList<CategoryModel>()
+                    categoryList = ArrayList()
                     for (snapshot in dataSnapshot.children) {
                         val post = snapshot.getValue(CategoryModel::class.java)
-                        posts.add(post!! as CategoryModel)
+                        categoryList.add(post!!)
                     }
 
-                    updateWalletPref()
-                    (context as MainActivity).updateWallet()
+                    (context as MainActivity).updateCategory()
 
                 }catch (ex: Exception){
-                    walletModel.wallet_all = 0
-                    walletModel.wallet_travel = 0
-                    walletModel.wallet_deposit = 0
-
-                    updateWalletPref()
-                    dbWalletRef.setValue(walletModel)
                 }
             }
 
@@ -74,8 +63,11 @@ class FirebaseWallet(private var context: Context) {
         })
     }
 
-    fun setCategory(){
+    fun addCategory(category: CategoryModel){
+        dbCategoryRef.push().setValue(category)
 
+        //todo убрать из-за нагрузки трафика
+        getCategory()
     }
 
     private fun getWalletFromDb(walletName: String){
@@ -89,8 +81,6 @@ class FirebaseWallet(private var context: Context) {
 
                 }catch (ex: Exception){
                     walletModel.wallet_all = 0
-                    walletModel.wallet_travel = 0
-                    walletModel.wallet_deposit = 0
 
                     updateWalletPref()
                     dbWalletRef.setValue(walletModel)
@@ -106,18 +96,8 @@ class FirebaseWallet(private var context: Context) {
 
     fun setWallet(type: Int, money: Int) {
         when (type) {
-            1 -> {
-                walletModel.wallet_all -= money -  walletModel.wallet_travel
-                walletModel.wallet_travel = money
-            }
-            2 -> {
-                walletModel.wallet_all -= money -  walletModel.wallet_deposit
-                walletModel.wallet_deposit = money
-            }
             else -> {
                 walletModel.wallet_all = money
-                walletModel.wallet_travel = 0
-                walletModel.wallet_deposit = 0
             }
         }
 
@@ -127,8 +107,6 @@ class FirebaseWallet(private var context: Context) {
 
     private fun updateWalletPref(){
         setPref(PREF_WALLET,  walletModel.wallet_all)
-        setPref(PREF_DEPOSIT,  walletModel.wallet_deposit)
-        setPref(PREF_TRAVEL,  walletModel.wallet_travel)
     }
 
     //set value to prefs
@@ -145,13 +123,5 @@ class FirebaseWallet(private var context: Context) {
 
     fun getAllWallet(): Int{
         return  walletModel.wallet_all
-    }
-
-    fun getTravelWallet(): Int{
-        return  walletModel.wallet_travel
-    }
-
-    fun getDepositWallet(): Int{
-        return  walletModel.wallet_deposit
     }
 }

@@ -9,6 +9,8 @@ import android.view.inputmethod.EditorInfo
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.FirebaseDatabase
+import com.yeskov35.yeskwallet.adapters.CategoryIconsAdapter
+import com.yeskov35.yeskwallet.adapters.WalletCategoryAdapter
 import com.yeskov35.yeskwallet.adapters.WalletHistoryAdapter
 import com.yeskov35.yeskwallet.core.FirebaseWallet
 import com.yeskov35.yeskwallet.dialogs.SetWalletCategoryDialog
@@ -23,27 +25,17 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var firebaseWallet: FirebaseWallet
 
+    private val iconsList: ArrayList<Int> = ArrayList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        SetWalletDialog.setDialog(
-            this,
-            wallet_travel_card,
-            resources.getString(R.string.hint_travel),
-            1
-        )
-        SetWalletDialog.setDialog(
-            this,
-            wallet_deposit_card,
-            resources.getString(R.string.hint_deposit),
-            2
-        )
         SetWalletDialog.setDialog(this, wallet_card, "текущий счет", 3)
 
-        SetWalletCategoryDialog.setDialog(this, icons)
+        SetWalletCategoryDialog.setDialog(this, icons, iconsList)
         // Loads animals into the ArrayList
-        addAnimals()
+        addIcons()
 
         // Creates a vertical Layout Manager
         //wallet_history.layoutManager = LinearLayoutManager(this)
@@ -58,55 +50,55 @@ class MainActivity : AppCompatActivity() {
         updateWallet()
     }
 
+    fun updateCategory(){
+        wallet_history.layoutManager = GridLayoutManager(this, 2)
+        wallet_history.adapter = WalletCategoryAdapter(this, firebaseWallet.categoryList, iconsList)
+    }
+
     fun updateWallet(){
         if (firebaseWallet.getAllWallet() > 0)
             total_wallet.text = TextUtils.priceFormat(firebaseWallet.getAllWallet())
-        if (firebaseWallet.getTravelWallet() > 0)
-            wallet_travel_text.text = TextUtils.priceFormat(firebaseWallet.getTravelWallet())
-        if (firebaseWallet.getDepositWallet() > 0)
-            wallet_deposit_text.text = TextUtils.priceFormat(firebaseWallet.getDepositWallet())
     }
 
-    fun addAnimals() {
-        animals.add("dog")
-        animals.add("cat")
-        animals.add("owl")
-        animals.add("cheetah")
-        animals.add("raccoon")
-        animals.add("bird")
-        animals.add("snake")
-        animals.add("lizard")
-        animals.add("hamster")
-        animals.add("bear")
-        animals.add("lion")
-        animals.add("tiger")
-        animals.add("horse")
-        animals.add("frog")
-        animals.add("fish")
-        animals.add("shark")
-        animals.add("turtle")
-        animals.add("elephant")
-        animals.add("cow")
-        animals.add("beaver")
-        animals.add("bison")
-        animals.add("porcupine")
-        animals.add("rat")
-        animals.add("mouse")
-        animals.add("goose")
-        animals.add("deer")
-        animals.add("fox")
-        animals.add("moose")
-        animals.add("buffalo")
-        animals.add("monkey")
-        animals.add("penguin")
-        animals.add("parrot")
+    fun addIcons() {
+        iconsList.add(R.drawable.ic_009_plugs)
+        iconsList.add(R.drawable.ic_010_contrast)
+        iconsList.add(R.drawable.ic_011_lines)
+        iconsList.add(R.drawable.ic_013_navigation_1)
+        iconsList.add(R.drawable.ic_014_electron)
+        iconsList.add(R.drawable.ic_015_week)
+        iconsList.add(R.drawable.ic_020_shopping_trolley)
+        iconsList.add(R.drawable.ic_030_entry)
+        iconsList.add(R.drawable.ic_031_pencil)
+        iconsList.add(R.drawable.ic_049_image_2)
+        iconsList.add(R.drawable.ic_051_tv)
+        iconsList.add(R.drawable.ic_053_padlock_2)
+        iconsList.add(R.drawable.ic_058_safe)
+        iconsList.add(R.drawable.ic_059_phone_book_1)
+        iconsList.add(R.drawable.ic_060_tools_and_utensils_4)
+        iconsList.add(R.drawable.ic_068_tools_and_utensils_3)
+        iconsList.add(R.drawable.ic_078_game_control)
+        iconsList.add(R.drawable.ic_082_wealth)
+        iconsList.add(R.drawable.ic_083_photography)
+        iconsList.add(R.drawable.ic_086_v_neck)
+        iconsList.add(R.drawable.ic_087_work_tools)
+        iconsList.add(R.drawable.ic_092_bulb_outline)
+        iconsList.add(R.drawable.ic_126_automobile)
+        iconsList.add(R.drawable.ic_130_attache_case)
+        iconsList.add(R.drawable.ic_136_pie)
+        iconsList.add(R.drawable.ic_146_padlock)
+        iconsList.add(R.drawable.ic_148_user_2)
+        iconsList.add(R.drawable.ic_162_mug)
+        iconsList.add(R.drawable.ic_165_clipboard_1)
+        iconsList.add(R.drawable.ic_192_clipboard)
+        iconsList.add(R.drawable.ic_195_house)
+        iconsList.add(R.drawable.ic_196_user)
+        iconsList.add(R.drawable.ic_200_terminal)
     }
 
     fun setWallet(type: Int, money: Int) {
         firebaseWallet.setWallet(type, money)
 
-        wallet_travel_text.text = TextUtils.priceFormat(firebaseWallet.getTravelWallet())
-        wallet_deposit_text.text = TextUtils.priceFormat(firebaseWallet.getDepositWallet())
         total_wallet.text = TextUtils.priceFormat(firebaseWallet.getAllWallet())
     }
 }
