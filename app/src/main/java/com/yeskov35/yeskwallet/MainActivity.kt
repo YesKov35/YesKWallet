@@ -33,23 +33,47 @@ class MainActivity : AppCompatActivity() {
 
         SetWalletDialog.setDialog(this, wallet_card, "текущий счет", 3)
 
-        SetWalletCategoryDialog.setDialog(this, icons, iconsList)
+
         // Loads animals into the ArrayList
         addIcons()
 
         // Creates a vertical Layout Manager
         //wallet_history.layoutManager = LinearLayoutManager(this)
 
-        wallet_history.layoutManager = GridLayoutManager(this, 2)
-        wallet_history.adapter = WalletHistoryAdapter(animals, this)
+        wallet_category.setOnClickListener { setAdapter(1) }
+        wallet_history_income.setOnClickListener { setAdapter(2) }
+        wallet_history_consumption.setOnClickListener { setAdapter(3) }
 
         firebaseWallet = FirebaseWallet(this)
         updateWallet()
     }
 
+    fun setAdapter(type: Int){
+        when(type) {
+            1 -> {
+                add_text.text = resources.getText(R.string.add_category)
+                SetWalletCategoryDialog.setDialog(this, add_btn, iconsList)
+
+                updateCategory()
+            }
+            2 -> {
+                add_text.text = resources.getText(R.string.add_income)
+            }
+
+            3 -> {
+                add_text.text = resources.getText(R.string.add_consumption)
+            }
+        }
+    }
+
     fun updateCategory(){
         wallet_history.layoutManager = GridLayoutManager(this, 2)
         wallet_history.adapter = WalletCategoryAdapter(this, firebaseWallet.categoryList, iconsList)
+    }
+
+    fun updateHistory(){
+        //wallet_history.layoutManager = LinearLayoutManager(this)
+        //wallet_history.adapter = WalletHistoryAdapter(this, )
     }
 
     fun updateWallet(){

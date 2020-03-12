@@ -7,4 +7,8 @@
     <string name="tab_income">Доход</string>
     <string name="tab_consumption">Расход</string>
     <string name="tab_category">Категории</string>
+
+    <string name="add_category">+ Добавить категорию</string>
+    <string name="add_income">+ Добавить доход</string>
+    <string name="add_consumption">+ Добавить расход</string>
 </resources>

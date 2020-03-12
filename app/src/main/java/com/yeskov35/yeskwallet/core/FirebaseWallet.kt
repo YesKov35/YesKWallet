@@ -10,6 +10,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.yeskov35.yeskwallet.MainActivity
 import com.yeskov35.yeskwallet.models.CategoryModel
+import com.yeskov35.yeskwallet.models.HistoryModel
 import com.yeskov35.yeskwallet.models.WalletModel
 import java.lang.Exception
 
@@ -23,10 +24,13 @@ class FirebaseWallet(private var context: Context) {
 
     var walletModel = WalletModel()
     var categoryList = ArrayList<CategoryModel>()
+    var historyIncomeList = ArrayList<HistoryModel>()
+    var historyConsList = ArrayList<HistoryModel>()
 
     private val db: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val dbWalletRef = db.getReference(userKey).child("wallet")
     private val dbCategoryRef = db.getReference(userKey).child("category")
+    private val dbHistoryRef = db.getReference(userKey).child("history")
 
     init {
         pref = context.getSharedPreferences(PREF, AppCompatActivity.MODE_PRIVATE)
@@ -38,6 +42,7 @@ class FirebaseWallet(private var context: Context) {
         }
 
         getCategory()
+        getHistory()
     }
 
     private fun getCategory(){
@@ -68,6 +73,42 @@ class FirebaseWallet(private var context: Context) {
 
         //todo убрать из-за нагрузки трафика
         getCategory()
+    }
+
+    private fun getHistory(){
+        dbHistoryRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                try {
+                    historyIncomeList = ArrayList()
+                    historyConsList = ArrayList()
+                    for (snapshot in dataSnapshot.children) {
+                        val post = snapshot.getValue(HistoryModel::class.java)
+
+                        if(post!!.type == 1){
+                            historyIncomeList.add(post)
+                        }else{
+                            historyConsList.add(post)
+                        }
+                    }
+
+                    (context as MainActivity).updateHistory()
+
+                }catch (ex: Exception){
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.w("FIREBASEERROR", "Failed to read value.", error.toException())
+            }
+        })
+    }
+
+    fun addHistory(history: HistoryModel){
+        dbHistoryRef.push().setValue(history)
+
+        //todo убрать из-за нагрузки трафика
+        getHistory()
     }
 
     private fun getWalletFromDb(walletName: String){
