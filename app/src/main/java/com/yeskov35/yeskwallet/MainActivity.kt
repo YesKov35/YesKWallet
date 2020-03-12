@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var firebaseWallet: FirebaseWallet
 
-    private val iconsList: ArrayList<Int> = ArrayList()
+    val iconsList: ArrayList<Int> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,10 +40,7 @@ class MainActivity : AppCompatActivity() {
         // Creates a vertical Layout Manager
         //wallet_history.layoutManager = LinearLayoutManager(this)
 
-        // You can use GridLayoutManager if you want multiple columns. Enter the number of columns as a parameter.
         wallet_history.layoutManager = GridLayoutManager(this, 2)
-
-        // Access the RecyclerView Adapter and load the data into it
         wallet_history.adapter = WalletHistoryAdapter(animals, this)
 
         firebaseWallet = FirebaseWallet(this)

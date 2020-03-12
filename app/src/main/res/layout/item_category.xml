@@ -4,7 +4,7 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/wallet_travel_card"
+        android:id="@+id/wallet_card"
         style="@style/StyleCardViewCompat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
