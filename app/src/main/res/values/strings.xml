@@ -11,4 +11,7 @@
     <string name="add_category">+ Добавить категорию</string>
     <string name="add_income">+ Добавить доход</string>
     <string name="add_consumption">+ Добавить расход</string>
+
+    <string name="hint_price">Введите сумму</string>
+    <string name="hint_desc">Введите примечание</string>
 </resources>

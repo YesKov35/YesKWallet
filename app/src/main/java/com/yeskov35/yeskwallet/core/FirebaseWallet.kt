@@ -12,6 +12,7 @@ import com.yeskov35.yeskwallet.MainActivity
 import com.yeskov35.yeskwallet.models.CategoryModel
 import com.yeskov35.yeskwallet.models.HistoryModel
 import com.yeskov35.yeskwallet.models.WalletModel
+import com.yeskov35.yeskwallet.utils.Constants
 import java.lang.Exception
 
 class FirebaseWallet(private var context: Context) {
@@ -84,14 +85,15 @@ class FirebaseWallet(private var context: Context) {
                     for (snapshot in dataSnapshot.children) {
                         val post = snapshot.getValue(HistoryModel::class.java)
 
-                        if(post!!.type == 1){
-                            historyIncomeList.add(post)
-                        }else{
-                            historyConsList.add(post)
+                        when(post!!.type){
+                            Constants.TYPE_INCOME ->{
+                                historyIncomeList.add(post)
+                            }
+                            Constants.TYPE_CONSUMPTION ->{
+                                historyConsList.add(post)
+                            }
                         }
                     }
-
-                    (context as MainActivity).updateHistory()
 
                 }catch (ex: Exception){
                 }
@@ -105,10 +107,18 @@ class FirebaseWallet(private var context: Context) {
     }
 
     fun addHistory(history: HistoryModel){
-        dbHistoryRef.push().setValue(history)
-
-        //todo убрать из-за нагрузки трафика
-        getHistory()
+        dbHistoryRef.push().setValue(history).addOnSuccessListener {
+            when(history.type){
+                Constants.TYPE_INCOME ->{
+                    historyIncomeList.add(history)
+                    (context as MainActivity).updateHistory(Constants.TYPE_INCOME)
+                }
+                Constants.TYPE_CONSUMPTION ->{
+                    historyConsList.add(history)
+                    (context as MainActivity).updateHistory(Constants.TYPE_CONSUMPTION)
+                }
+            }
+        }
     }
 
     private fun getWalletFromDb(walletName: String){

@@ -1,16 +1,13 @@
 package com.yeskov35.yeskwallet.dialogs
 
-import android.app.Activity
-import android.content.Context
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import com.yeskov35.yeskwallet.MainActivity
 import com.yeskov35.yeskwallet.R
+import com.yeskov35.yeskwallet.utils.Constants
 import com.yeskov35.yeskwallet.utils.TextUtils
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_set_wallet.view.*
 
 object SetWalletDialog {
@@ -23,37 +20,48 @@ object SetWalletDialog {
             val mBuilder = AlertDialog.Builder(card.context)
                 .setView(mDialogView)
 
-            var wallet = when (type) {
-                else -> {
-                    activity.firebaseWallet.getAllWallet()
+            when (type) {
+                Constants.TYPE_INCOME -> {
+                    mDialogView.title.text = activity.resources.getString(R.string.tab_income)
+                    mDialogView.desc_text.visibility = View.VISIBLE
+                }
+                Constants.TYPE_CONSUMPTION -> {
+                    mDialogView.title.text = activity.resources.getString(R.string.tab_consumption)
+                    mDialogView.desc_text.visibility = View.VISIBLE
+                }
+                Constants.TYPE_PRICE -> {
+                    mDialogView.title.text = "Текущий счет: ".plus(TextUtils.priceFormat(activity.firebaseWallet.getAllWallet()))
+                        .plus("\nУстановите цену для ").plus(title)
                 }
             }
-
-            mDialogView.title.text = "Текущий счет: ".plus(TextUtils.priceFormat(wallet))
-                .plus("\nУстановите цену для ").plus(title)
-
-            mDialogView.wallet_text.addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(p0: Editable?) {
-                }
-
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (mDialogView.wallet_text.text.toString().isNotEmpty() && type < 3) {
-                        if (mDialogView.wallet_text.text.toString().toInt() > wallet) {
-                            mDialogView.wallet_text.setText(wallet.toString())
-                        }
-                    }
-                }
-            })
 
             val mAlertDialog = mBuilder.show()
 
             mDialogView.submit.setOnClickListener {
-                activity.setWallet(type, mDialogView.wallet_text.text.toString().toInt())
-                mAlertDialog.dismiss()
+                when (type) {
+                    Constants.TYPE_INCOME -> {
+                        activity.setHistory(
+                            mDialogView.wallet_text.text.toString().toInt(),
+                            mDialogView.desc_text.text.toString(),
+                            Constants.TYPE_INCOME)
+                        mAlertDialog.dismiss()
+                    }
+                    Constants.TYPE_CONSUMPTION -> {
+                        activity.setHistory(
+                            mDialogView.wallet_text.text.toString().toInt(),
+                            mDialogView.desc_text.text.toString(),
+                            Constants.TYPE_CONSUMPTION)
+                        mAlertDialog.dismiss()
+                    }
+                    Constants.TYPE_PRICE -> {
+                        activity.setWallet(type, mDialogView.wallet_text.text.toString().toInt())
+                        mAlertDialog.dismiss()
+                    }
+                }
+
             }
         }
     }
+
+
 }

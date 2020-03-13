@@ -1,23 +1,20 @@
 package com.yeskov35.yeskwallet
 
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.inputmethod.EditorInfo
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.database.FirebaseDatabase
-import com.yeskov35.yeskwallet.adapters.CategoryIconsAdapter
 import com.yeskov35.yeskwallet.adapters.WalletCategoryAdapter
 import com.yeskov35.yeskwallet.adapters.WalletHistoryAdapter
 import com.yeskov35.yeskwallet.core.FirebaseWallet
 import com.yeskov35.yeskwallet.dialogs.SetWalletCategoryDialog
 import com.yeskov35.yeskwallet.dialogs.SetWalletDialog
+import com.yeskov35.yeskwallet.models.HistoryModel
+import com.yeskov35.yeskwallet.utils.Constants
 import com.yeskov35.yeskwallet.utils.TextUtils
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_set_wallet.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        SetWalletDialog.setDialog(this, wallet_card, "текущий счет", 3)
+        SetWalletDialog.setDialog(this, wallet_card, "текущий счет", Constants.TYPE_PRICE)
 
 
         // Loads animals into the ArrayList
@@ -41,8 +38,8 @@ class MainActivity : AppCompatActivity() {
         //wallet_history.layoutManager = LinearLayoutManager(this)
 
         wallet_category.setOnClickListener { setAdapter(1) }
-        wallet_history_income.setOnClickListener { setAdapter(2) }
-        wallet_history_consumption.setOnClickListener { setAdapter(3) }
+        wallet_history_income.setOnClickListener { setAdapter(Constants.TYPE_INCOME) }
+        wallet_history_consumption.setOnClickListener { setAdapter(Constants.TYPE_CONSUMPTION) }
 
         firebaseWallet = FirebaseWallet(this)
         updateWallet()
@@ -56,12 +53,18 @@ class MainActivity : AppCompatActivity() {
 
                 updateCategory()
             }
-            2 -> {
+            Constants.TYPE_INCOME -> {
                 add_text.text = resources.getText(R.string.add_income)
+                SetWalletDialog.setDialog(this, add_btn, "", Constants.TYPE_INCOME)
+
+                updateHistory(Constants.TYPE_INCOME)
             }
 
-            3 -> {
+            Constants.TYPE_CONSUMPTION -> {
                 add_text.text = resources.getText(R.string.add_consumption)
+                SetWalletDialog.setDialog(this, add_btn, "", Constants.TYPE_CONSUMPTION)
+
+                updateHistory(Constants.TYPE_CONSUMPTION)
             }
         }
     }
@@ -71,9 +74,17 @@ class MainActivity : AppCompatActivity() {
         wallet_history.adapter = WalletCategoryAdapter(this, firebaseWallet.categoryList, iconsList)
     }
 
-    fun updateHistory(){
-        //wallet_history.layoutManager = LinearLayoutManager(this)
-        //wallet_history.adapter = WalletHistoryAdapter(this, )
+    fun updateHistory(type: Int){
+        wallet_history.layoutManager = LinearLayoutManager(this)
+
+        when(type){
+            Constants.TYPE_INCOME ->{
+                wallet_history.adapter = WalletHistoryAdapter(this, firebaseWallet.historyIncomeList)
+            }
+            Constants.TYPE_CONSUMPTION ->{
+                wallet_history.adapter = WalletHistoryAdapter(this, firebaseWallet.historyConsList)
+            }
+        }
     }
 
     fun updateWallet(){
@@ -121,5 +132,16 @@ class MainActivity : AppCompatActivity() {
         firebaseWallet.setWallet(type, money)
 
         total_wallet.text = TextUtils.priceFormat(firebaseWallet.getAllWallet())
+    }
+
+    fun setHistory(count: Int, desc: String, type: Int){
+        val historyModel = HistoryModel()
+
+        historyModel.wallet_count = count
+        historyModel.desc = desc
+        historyModel.date = Calendar.getInstance().timeInMillis
+        historyModel.type = type
+
+        firebaseWallet.addHistory(historyModel)
     }
 }

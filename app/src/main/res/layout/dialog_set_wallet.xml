@@ -20,6 +20,20 @@
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:background="@color/colorPrimary"
+        android:hint="@string/hint_price"
+        android:layout_width="match_parent"/>
+
+    <EditText
+        android:id="@+id/desc_text"
+        style="@style/StyleEditMoney"
+        android:inputType="text"
+        android:padding="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorPrimary"
+        android:hint="@string/hint_desc"
+        android:visibility="gone"
         android:layout_width="match_parent"/>
 
     <androidx.cardview.widget.CardView

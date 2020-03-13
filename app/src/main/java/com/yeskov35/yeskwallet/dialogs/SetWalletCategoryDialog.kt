@@ -29,7 +29,7 @@ object SetWalletCategoryDialog {
 
             mDialogView.submit.setOnClickListener {
 
-                var categoryModel = CategoryModel()
+                val categoryModel = CategoryModel()
 
                 categoryModel.category_id =
                     (mAlertDialog.icons_recycler.adapter as CategoryIconsAdapter).selectedIcon
