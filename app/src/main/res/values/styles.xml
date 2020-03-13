@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
     </style>
 
     <style name="StyleMoney">
@@ -34,10 +35,6 @@
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="cardBackgroundColor">@color/colorPrimary</item>
-    </style>
-
-    <style name="StyleCardViewCompat" parent="StyleCardView">
-        <item name="cardUseCompatPadding">true</item>
     </style>
 
     <style name="StyleTab">

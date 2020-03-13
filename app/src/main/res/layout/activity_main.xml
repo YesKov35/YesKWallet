@@ -12,15 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="20dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp">
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/wallet_card"
-            style="@style/StyleCardViewCompat"
+            style="@style/StyleCardView"
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:layout_marginEnd="8dp"
             android:layout_height="wrap_content">
 
             <TextView
@@ -32,8 +33,9 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/icons"
-            style="@style/StyleCardViewCompat"
+            style="@style/StyleCardView"
             android:layout_width="50dp"
+            android:layout_marginEnd="8dp"
             android:layout_height="wrap_content">
 
             <TextView
@@ -48,7 +50,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            style="@style/StyleCardViewCompat"
+            style="@style/StyleCardView"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="@color/colorRed">
@@ -68,9 +70,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="14dp"
-        android:paddingEnd="14dp">
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/wallet_category"
@@ -122,10 +125,10 @@
         android:id="@+id/add_btn"
         style="@style/StyleCardView"
         android:layout_width="match_parent"
-        android:layout_marginEnd="14dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="5dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="8dp">
 
         <TextView
             android:id="@+id/add_text"
@@ -139,7 +142,8 @@
         android:id="@+id/wallet_history"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"/>
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="4dp"/>
 
 </LinearLayout>

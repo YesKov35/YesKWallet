@@ -8,7 +8,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/icon_card"
-        style="@style/StyleCardViewCompat"
+        style="@style/StyleCardView"
         android:layout_gravity="center"
         android:layout_width="50dp"
         android:layout_height="50dp">
